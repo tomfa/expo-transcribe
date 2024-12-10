@@ -13,9 +13,16 @@ export default function HomeScreen() {
   const [currentLine, setCurrentLine] = useState('');
   const [supportedLocales, setSupportedLocales] = useState<string[]>([]);
 
-  useSpeechRecognitionEvent("start", () => setRecognizing(true));
-  useSpeechRecognitionEvent("end", () => setRecognizing(false));
+  useSpeechRecognitionEvent("start", () => {
+    console.log("start")
+    setRecognizing(true)
+  });
+  useSpeechRecognitionEvent("end", () => {
+    console.log("end")
+    setRecognizing(false)
+  });
   useSpeechRecognitionEvent("result", (event) => {
+    console.log(event.results)
     const transcript = event.results[0];
     if (!transcript) {
       return;
@@ -29,6 +36,12 @@ export default function HomeScreen() {
   });
   useSpeechRecognitionEvent("error", (event) => {
     console.log("error code:", event.error, "error message:", event.message);
+  });
+  useSpeechRecognitionEvent("speechend", () => {
+    console.log('speechend')
+  });
+  useSpeechRecognitionEvent("speechstart", () => {
+    console.log('speechstart')
   });
 
   const handleStart = async () => {
@@ -52,22 +65,29 @@ export default function HomeScreen() {
 
   const updateSupportedLocales = async () => {
     const supportedLocales = await ExpoSpeechRecognitionModule.getSupportedLocales({});
+    console.log('supportedLocales', supportedLocales)
+    const service = ExpoSpeechRecognitionModule.getDefaultRecognitionService()
+    console.log('service', service)
     setSupportedLocales(supportedLocales.installedLocales);
   };
 
   useEffect(() => {
-    // updateSupportedLocales();
+    const available = supportsOnDeviceRecognition();
+    console.log("OnDevice recognition available:", available);
+    updateSupportedLocales();
   }, []);
 
   return (
     <View>
-      <Text>{JSON.stringify(supportedLocales, null, 2)}</Text>
       {!recognizing ? (
         <Button title="Start" onPress={handleStart} />
       ) : (
         <Button
           title="Stop"
-          onPress={() => ExpoSpeechRecognitionModule.stop()}
+          onPress={() => {
+            console.log('button:stop')
+            ExpoSpeechRecognitionModule.stop()
+          }}
         />
       )}
 
