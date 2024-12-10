@@ -1,17 +1,31 @@
 import {  StyleSheet, View, Button, ScrollView , Text} from 'react-native';
 
-import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
+import {
+  ExpoSpeechRecognitionModule,
+  supportsOnDeviceRecognition,
+  useSpeechRecognitionEvent
+} from 'expo-speech-recognition';
 import { useState, useEffect } from 'react';
 
 export default function HomeScreen() {
   const [recognizing, setRecognizing] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [currentLine, setCurrentLine] = useState('');
   const [supportedLocales, setSupportedLocales] = useState<string[]>([]);
 
   useSpeechRecognitionEvent("start", () => setRecognizing(true));
   useSpeechRecognitionEvent("end", () => setRecognizing(false));
   useSpeechRecognitionEvent("result", (event) => {
-    setTranscript(event.results[0]?.transcript);
+    const transcript = event.results[0];
+    if (!transcript) {
+      return;
+    }
+    if (transcript.segments.length) {
+      setCurrentLine(transcript.transcript)
+    } else {
+      setTranscript(ex => ex + ' ' + transcript.transcript);
+      setCurrentLine('')
+    }
   });
   useSpeechRecognitionEvent("error", (event) => {
     console.log("error code:", event.error, "error message:", event.message);
@@ -29,7 +43,7 @@ export default function HomeScreen() {
       lang: "nb-NO",
       interimResults: true,
       maxAlternatives: 1,
-      continuous: false,
+      continuous: true,
       requiresOnDeviceRecognition: false,
       addsPunctuation: true,
       contextualStrings: [],
@@ -59,6 +73,7 @@ export default function HomeScreen() {
 
       <ScrollView>
         <Text>{transcript}</Text>
+        <Text>{currentLine}</Text>
       </ScrollView>
     </View>
   );
