@@ -1,50 +1,24 @@
-# Welcome to your Expo app 👋
+# expo-speech-recognition demo
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Utilizes [https://github.com/jamsch/expo-speech-recognition](https://github.com/jamsch/expo-speech-recognition) for speech recognition.
 
-## Get started
+This library in turn utilizes speech recognition services provided by the Platform (Apple/Google). Note that this does not (usually – yet anyway) imply on-device transcription. 
 
-1. Install dependencies
+## Pros:
+- No need to pay anything. Free, easy, speech recognition! 
+- There is a boolean flag to enforce ON-device translation if supported, so future transition is probably easy if that's desirable.
+- It (surprisingly) works on Mac + Chrome
 
-   ```bash
-   npm install
-   ```
+## Con
+- Consider recording duration limited to < 1 minute.
+- Limited things to play with: can't turn on e.g. actor detection.
+- Can't use Expo Go with this lib. You'll have to run e.g. `expo run:ios` with a simulator instead.
 
-2. Start the app
+#### Limitations: long sessions
 
-   ```bash
-    npx expo start
-   ```
+Is not suitable for a long recording session, because that's not what it's intended to offer.
 
-In the output, you'll find options to open the app in a
+[Apple's own docs](https://developer.apple.com/documentation/speech/sfspeechrecognizer) says 
+> Because speech recognition is a network-based service, limits are enforced so that the service can remain freely available to all apps. Individual devices may be limited in the number of recognitions that can be performed per day, and each app may be throttled globally based on the number of requests it makes per day
+> Plan for a one-minute limit on audio duration. Speech recognition places a relatively high burden on battery life and network usage. To minimize this burden, the framework stops speech recognition tasks that last longer than one minute. This limit is similar to the one for keyboard-related dictation.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
